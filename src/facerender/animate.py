@@ -23,6 +23,7 @@ from pydub import AudioSegment
 from src.utils.face_enhancer import enhancer_generator_with_len, enhancer_list
 from src.utils.paste_pic import paste_pic
 from src.utils.videoio import save_video_with_watermark
+from src.utils.videoio import write_video_with_cv2
 
 try:
     import webui  # in webui
@@ -202,7 +203,8 @@ class AnimateFromCoeff():
         video_name = x['video_name']  + '.mp4'
         path = os.path.join(video_save_dir, 'temp_'+video_name)
         
-        imageio.mimsave(path, result,  fps=float(25))
+        # imageio.mimsave(path, result,  fps=float(25))
+        write_video_with_cv2(path, result, 25)
 
         av_path = os.path.join(video_save_dir, video_name)
         return_path = av_path 
@@ -241,10 +243,12 @@ class AnimateFromCoeff():
 
             try:
                 enhanced_images_gen_with_len = enhancer_generator_with_len(full_video_path, method=enhancer, bg_upsampler=background_enhancer)
-                imageio.mimsave(enhanced_path, enhanced_images_gen_with_len, fps=float(25))
+                # imageio.mimsave(enhanced_path, enhanced_images_gen_with_len, fps=float(25))
+                write_video_with_cv2(enhanced_path, enhanced_images_gen_with_len, 25)
             except:
                 enhanced_images_gen_with_len = enhancer_list(full_video_path, method=enhancer, bg_upsampler=background_enhancer)
-                imageio.mimsave(enhanced_path, enhanced_images_gen_with_len, fps=float(25))
+                # imageio.mimsave(enhanced_path, enhanced_images_gen_with_len, fps=float(25))
+                write_video_with_cv2(enhanced_path, enhanced_images_gen_with_len, 25)
             
             save_video_with_watermark(enhanced_path, new_audio_path, av_path_enhancer, watermark= False)
             print(f'The generated video is named {video_save_dir}/{video_name_enhancer}')

@@ -17,6 +17,14 @@ def load_video_to_cv2(input_path):
         full_frames.append(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
     return full_frames
 
+def write_video_with_cv2(filename, frames, fps):
+    width, height = frames[0].shape[0], frames[0].shape[1]
+    out = cv2.VideoWriter(filename, cv2.VideoWriter_fourcc(*'mp4v'), fps, (width, height))
+    for frame in frames:
+        out.write(frame)
+    out.release()
+    
+
 def save_video_with_watermark(video, audio, save_path, watermark=False):
     temp_file = str(uuid.uuid4())+'.mp4'
     cmd = r'ffmpeg -y -hide_banner -loglevel error -i "%s" -i "%s" -vcodec copy "%s"' % (video, audio, temp_file)
